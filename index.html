@@ -1,0 +1,87 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="https://js.cx/libs/animate.js"></script>
+</head>
+<body>
+
+  <span id="counter" hidden></span>
+  <center><canvas id="txt" height="100" width="700" style="background-color:#eee; border:1px solid #ccc;"></canvas></center>
+  <center><textarea id="textArea" rows="3" cols="50">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt, felis ut ornare placerat.</textarea></center>
+  <center><button onclick="animateText(textArea)">Start</button><br></center>
+  <br>Font<br>
+  <input type="radio" id="r1_v" name="r1" value="Verdana" checked>Verdana<br>
+  <input type="radio" id="r1_t" name="r1" value="Times New Roman">Times New Roman<br>
+  <input type="radio" id="r1_i" name="r1" value="Impact">Impact<br>
+  <br>Color<br>
+  <input type="radio" id="r2_r" name="r2" value="red" checked>Red<br>
+  <input type="radio" id="r2_g" name="r2" value="green">Green<br>
+  <input type="radio" id="r2_b" name="r2" value="blue">Blue<br>
+  <br>Speed<br>
+  <input type="radio" id="r3_s" name="r3" value="slow">Slow<br>
+  <input type="radio" id="r3_n" name="r3" value="normal" checked>Normal<br>
+  <input type="radio" id="r3_f" name="r3" value="fast">Fast<br>
+  <script>
+  var speed;
+
+    function animateText(textArea) {
+      if(textArea.value.length>100){
+        textArea.value="100 characters maximum";
+      }
+      else{
+        var canvas = document.getElementById("txt"), context = canvas.getContext("2d");
+        context.font = "14px Verdana";
+        if(document.getElementById("r3_s").checked)
+          speed=7500;
+        if(document.getElementById("r3_n").checked)
+          speed=5000;
+        if(document.getElementById("r3_f").checked)
+          speed=2500;
+        var text = textArea.value;
+        var to = text.length,
+          from = 0;
+
+        animate({
+          duration: speed,
+          timing: bounce,
+          draw: function(progress) {
+            var result = (to - from) * progress + from;
+            if(document.getElementById("r2_r").checked)
+              context.fillStyle = "#F00";
+            if(document.getElementById("r2_g").checked)
+              context.fillStyle = "#0F0";
+            if(document.getElementById("r2_b").checked)
+              context.fillStyle = "#00F";
+            var tmp = text.substr(0, Math.ceil(result));
+            if(document.getElementById("r1_v").checked)
+              context.font = "14px Verdana";
+            if(document.getElementById("r1_t").checked)
+              context.font = "14px Times New Roman";
+            if(document.getElementById("r1_i").checked)
+              context.font = "14px Impact";
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.fillText(tmp,30,50);
+          }
+        });
+      }
+    }
+
+
+    function bounce(timeFraction) {
+      /*var a=0, b=1;//специальный алгоритм отскока
+      while(timeFraction < (7 - 4 * a) / 11){
+        a+=b;
+        b/=2;
+      }
+      return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2)*/
+      for (var a = 0, b = 1, result; 1; a += b, b /= 2) {
+        if (timeFraction >= (7 - 4 * a) / 11) {
+          return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2)
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>
